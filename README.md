@@ -45,7 +45,7 @@ Player Management API is a Spring Boot application that provides RESTful endpoin
 
 3. Run the application:
    ```bash
-   mvn spring-boot:run
+    docker compose up -d
    ```
 
 4. The application will be available at `http://localhost:8080`.
