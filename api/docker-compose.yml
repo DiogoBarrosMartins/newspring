@@ -1,0 +1,22 @@
+services:
+  java_api:
+    container_name: java_api
+    image: java_app:1.0.0
+    build: .
+    ports:
+      - 8080:8080
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://api_db:5432/api
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=FunDevLol
+    depends_on:
+      - api_db
+  api_db:
+    container_name: api_db
+    image: postgres:12
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: FunDevLol
+      POSTGRES_DB: api
