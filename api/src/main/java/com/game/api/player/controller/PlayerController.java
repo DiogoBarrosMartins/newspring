@@ -1,8 +1,7 @@
 package com.game.api.player.controller;
 
-import com.game.api.player.entity.Player;
-import com.game.api.player.repository.PlayerRepository;
-
+import com.game.api.player.dto.PlayerDTO;
+import com.game.api.player.service.PlayerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,42 +12,35 @@ import java.util.List;
 public class PlayerController {
 
     @Autowired
-    private PlayerRepository playerRepository;
-
+    private PlayerService playerService;
 
     @GetMapping
-    public List<Player> getPlayers() {
-        return playerRepository.findAll();
+    public List<PlayerDTO> getPlayers() {
+        return playerService.getAllPlayers();
     }
 
     @GetMapping("/{id}")
-    public Player getPlayer(@PathVariable Long id) {
-        return playerRepository.findById(id).get();
+    public PlayerDTO getPlayer(@PathVariable Long id) {
+        return playerService.getPlayerById(id).orElseThrow(() -> new RuntimeException("Player not found"));
     }
 
-    @PostMapping()
-    public Player createPlayer(@RequestBody Player player) {
-        return playerRepository.save(player);
+    @PostMapping
+    public PlayerDTO createPlayer(@RequestBody PlayerDTO playerDTO) {
+        return playerService.createPlayer(playerDTO);
     }
 
     @PatchMapping("/{id}")
-    public Player updatePlayer(@PathVariable Long id, @RequestBody Player player) {
-        Player existingPlayer = playerRepository.findById(id).get();
-        existingPlayer.setFirstName(player.getFirstName());
-        existingPlayer.setLastName(player.getLastName());
-        existingPlayer.setEmail(player.getEmail());
-        return playerRepository.save(existingPlayer);
+    public PlayerDTO updatePlayer(@PathVariable Long id, @RequestBody PlayerDTO playerDTO) {
+        return playerService.updatePlayer(id, playerDTO);
     }
 
     @DeleteMapping("/{id}")
     public String deletePlayer(@PathVariable Long id) {
         try {
-            playerRepository.deleteById(id);
+            playerService.deletePlayer(id);
             return "Deleted";
         } catch (Exception e) {
             return e.getMessage();
         }
-
     }
 }
-
