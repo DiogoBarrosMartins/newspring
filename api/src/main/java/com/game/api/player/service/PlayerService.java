@@ -3,6 +3,9 @@ package com.game.api.player.service;
 import com.game.api.player.dto.PlayerDTO;
 import com.game.api.player.entity.Player;
 import com.game.api.player.repository.PlayerRepository;
+import com.game.api.village.dto.VillageDTO;
+import com.game.api.village.entity.Village;
+import com.game.api.village.service.VillageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +19,9 @@ public class PlayerService {
     @Autowired
     private PlayerRepository playerRepository;
 
+    @Autowired
+    private VillageService villageService;
+
     public List<PlayerDTO> getAllPlayers() {
         return playerRepository.findAll().stream().map(this::convertToDto).collect(Collectors.toList());
     }
@@ -26,7 +32,13 @@ public class PlayerService {
 
     public PlayerDTO createPlayer(PlayerDTO playerDTO) {
         Player player = convertToEntity(playerDTO);
-        return convertToDto(playerRepository.save(player));
+
+        // Create a new village and associate it with the player
+        Village newVillage = villageService.createNewVillage("New Village");
+        player.setVillages(List.of(newVillage));
+
+        Player savedPlayer = playerRepository.save(player);
+        return convertToDto(savedPlayer);
     }
 
     public PlayerDTO updatePlayer(Long id, PlayerDTO playerDTO) {
@@ -34,6 +46,7 @@ public class PlayerService {
         player.setFirstName(playerDTO.getFirstName());
         player.setLastName(playerDTO.getLastName());
         player.setEmail(playerDTO.getEmail());
+        player.setVillages(playerDTO.getVillages().stream().map(villageService::convertToEntity).collect(Collectors.toList()));
         return convertToDto(playerRepository.save(player));
     }
 
@@ -42,14 +55,17 @@ public class PlayerService {
     }
 
     private PlayerDTO convertToDto(Player player) {
-        return new PlayerDTO( player.getFirstName(), player.getLastName(), player.getEmail());
+        List<VillageDTO> villageDTOs = player.getVillages().stream().map(villageService::convertToDto).collect(Collectors.toList());
+        return new PlayerDTO(player.getId(), player.getFirstName(), player.getLastName(), player.getEmail(), villageDTOs);
     }
 
     private Player convertToEntity(PlayerDTO playerDTO) {
         Player player = new Player();
+        player.setId(playerDTO.getId());
         player.setFirstName(playerDTO.getFirstName());
         player.setLastName(playerDTO.getLastName());
         player.setEmail(playerDTO.getEmail());
+        player.setVillages(playerDTO.getVillages().stream().map(villageService::convertToEntity).collect(Collectors.toList()));
         return player;
     }
 }

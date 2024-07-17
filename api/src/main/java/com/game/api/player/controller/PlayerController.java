@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/players")
@@ -20,11 +21,11 @@ public class PlayerController {
     }
 
     @GetMapping("/{id}")
-    public PlayerDTO getPlayer(@PathVariable Long id) {
-        return playerService.getPlayerById(id).orElseThrow(() -> new RuntimeException("Player not found"));
+    public Optional<PlayerDTO> getPlayer(@PathVariable Long id) {
+        return playerService.getPlayerById(id);
     }
 
-    @PostMapping
+    @PostMapping()
     public PlayerDTO createPlayer(@RequestBody PlayerDTO playerDTO) {
         return playerService.createPlayer(playerDTO);
     }

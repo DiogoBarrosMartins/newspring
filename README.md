@@ -35,7 +35,7 @@ Player Management API is a Spring Boot application that provides RESTful endpoin
 1. Clone the repository:
    ```bash
    git clone https://github.com/DiogoBarrosMartins/newspring
-   cd newspring
+   cd api
    ```
 
 2. Build the project using Maven:
@@ -45,6 +45,7 @@ Player Management API is a Spring Boot application that provides RESTful endpoin
 
 3. Run the application:
    ```bash
+    Open Docker Desktop app:
     docker compose up -d
    ```
 
