@@ -16,7 +16,7 @@ public class AccountMapper {
         entity.setId(dto.getId());
         entity.setUsername(dto.getUsername());
         entity.setTribe(dto.getTribe());
-
+        entity.setVillageIds(dto.getVillageIds());
         return entity;
     }
 
@@ -30,6 +30,7 @@ public class AccountMapper {
         dto.setUsername(entity.getUsername());
         dto.setTribe(entity.getTribe());
         dto.setPassword("**hidden**");
+        dto.setVillageIds(entity.getVillageIds());
         return dto;
     }
 }

@@ -21,7 +21,12 @@ public class AccountController {
 
     @PostMapping
     public ResponseEntity<AccountDTO> createAccount(@RequestBody AccountDTO accountDTO) {
-        AccountDTO createdAccount = accountService.createAccount(accountDTO);
+        AccountDTO createdAccount = null;
+        try {
+            createdAccount = accountService.createAccount(accountDTO);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         return new ResponseEntity<>(createdAccount, HttpStatus.CREATED);
     }
 
@@ -54,8 +59,8 @@ public class AccountController {
 
 
     @PatchMapping("/{id}")
-    public Account updatePlayer(@PathVariable Long id, @RequestBody String firstName, @RequestParam String lastName, @RequestParam String email) {
-        return accountService.updatePlayer(id, firstName, lastName, email);
+    public Account updatePlayer(@PathVariable Long id, @RequestBody String username, @RequestParam String password) {
+        return accountService.updatePlayer(id, username, password);
     }
 
     @DeleteMapping("/{id}")

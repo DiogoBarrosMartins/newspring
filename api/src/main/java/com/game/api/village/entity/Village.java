@@ -1,31 +1,22 @@
 package com.game.api.village.entity;
 
-
 import jakarta.persistence.*;
+import com.game.api.login.entity.Account;
 
 @Entity
-@Table(name = "villages")
 public class Village {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column( nullable = false)
     private String name;
 
-    @Column( nullable = false)
-    private String playerId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "account_id")
+    private Account account;
 
-
-    public Village(Long id, String name, String playerId) {
-        this.id = id;
-        this.name = name;
-        this.playerId = playerId;
-    }
-
-    public Village() {
-    }
-
+    // Getters and Setters
     public Long getId() {
         return id;
     }
@@ -42,11 +33,11 @@ public class Village {
         this.name = name;
     }
 
-    public String getPlayerId() {
-        return playerId;
+    public Account getAccount() {
+        return account;
     }
 
-    public void setPlayerId(String playerId) {
-        this.playerId = playerId;
+    public void setAccount(Account account) {
+        this.account = account;
     }
 }
