@@ -1,7 +1,8 @@
-package com.game.api.player.controller;
+package com.game.api.controller;
 
-import com.game.api.player.dto.PlayerDTO;
-import com.game.api.player.service.PlayerService;
+import com.game.api.dto.PlayerDTO;
+import com.game.api.entity.Player;
+import com.game.api.service.PlayerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -9,19 +10,19 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/players")
+@RequestMapping("/players")
 public class PlayerController {
 
     @Autowired
     private PlayerService playerService;
 
     @GetMapping
-    public List<PlayerDTO> getPlayers() {
+    public List<Player> getPlayers() {
         return playerService.getAllPlayers();
     }
 
     @GetMapping("/{id}")
-    public Optional<PlayerDTO> getPlayer(@PathVariable Long id) {
+    public Optional<Player> getPlayer(@PathVariable Long id) {
         return playerService.getPlayerById(id);
     }
 
@@ -31,8 +32,8 @@ public class PlayerController {
     }
 
     @PatchMapping("/{id}")
-    public PlayerDTO updatePlayer(@PathVariable Long id, @RequestBody PlayerDTO playerDTO) {
-        return playerService.updatePlayer(id, playerDTO);
+    public Player updatePlayer(@PathVariable Long id, @RequestBody String firstName, @RequestParam String lastName, @RequestParam String email) {
+        return playerService.updatePlayer(id, firstName, lastName, email);
     }
 
     @DeleteMapping("/{id}")
