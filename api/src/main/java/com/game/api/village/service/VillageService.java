@@ -1,5 +1,6 @@
 package com.game.api.village.service;
 
+
 import com.game.api.village.dto.VillageDTO;
 import com.game.api.village.entity.Village;
 import com.game.api.village.dto.VillageMapper;
@@ -29,11 +30,6 @@ public class VillageService {
                 .orElse(null);
     }
 
-    public VillageDTO saveVillage(VillageDTO villageDTO) {
-        Village village = VillageMapper.dtoToEntity(villageDTO);
-        Village savedVillage = villageRepository.save(village);
-        return VillageMapper.entityToDto(savedVillage);
-    }
 
     public void deleteVillage(Long id) {
         villageRepository.deleteById(id);
@@ -45,4 +41,6 @@ public class VillageService {
         village.setAccount(account);
         return villageRepository.save(village);
     }
+
+
 }

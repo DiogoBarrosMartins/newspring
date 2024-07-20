@@ -5,6 +5,7 @@ import com.game.api.login.dto.AccountMapper;
 import com.game.api.login.entity.Account;
 import com.game.api.login.exceptions.EmailAlreadyExistsException;
 import com.game.api.login.repository.AccountRepository;
+import com.game.api.village.dto.VillageDTO;
 import com.game.api.village.entity.Village;
 import com.game.api.village.service.VillageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 
 @Service
 public class AccountService {
@@ -27,6 +27,10 @@ public class AccountService {
 
     @Autowired
     private VillageService villageService;
+
+    public Account saveAccount(Account account) {
+        return accountRepository.save(account);
+    }
 
     public AccountDTO createAccount(AccountDTO accountDTO) throws Exception {
         Account account = accountMapper.dtoToEntity(accountDTO);
@@ -81,29 +85,24 @@ public class AccountService {
         accountRepository.deleteById(id);
     }
 
-    public List<Long> getAccountVillageIds(Long accountId) {
-        Account account = accountRepository.findById(accountId).orElse(null);
-        return account != null ? account.getVillageIds() : null;
-    }
 
-    public Account addVillageToAccount(Long accountId, Long villageId) {
+
+    @Transactional
+    public AccountDTO addVillageToAccount(Long accountId, String villageName) {
         Account account = accountRepository.findById(accountId).orElse(null);
-        if (account != null && villageService.getVillageById(villageId) != null) {
+        if (account != null) {
+            Village village = new Village();
+            village.setName(villageName);
+            village.setAccount(account);
+            Village savedVillageDTO = villageService.createVillage(villageName, account);
+
             if (account.getVillageIds() == null) {
                 account.setVillageIds(new ArrayList<>());
             }
-            account.getVillageIds().add(villageId);
-            return accountRepository.save(account);
+            account.getVillageIds().add(savedVillageDTO.getId());
+             accountRepository.save(account);
         }
-        return null;
+        return accountMapper.entityToDto(account);
     }
 
-    public Account removeVillageFromAccount(Long accountId, Long villageId) {
-        Account account = accountRepository.findById(accountId).orElse(null);
-        if (account != null && account.getVillageIds().contains(villageId)) {
-            account.getVillageIds().remove(villageId);
-            return accountRepository.save(account);
-        }
-        return null;
-    }
 }

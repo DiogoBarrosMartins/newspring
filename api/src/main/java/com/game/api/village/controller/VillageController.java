@@ -24,16 +24,7 @@ public class VillageController {
         return villageService.getVillageById(id);
     }
 
-    @PostMapping
-    public VillageDTO createVillage(@RequestBody VillageDTO villageDTO) {
-        return villageService.saveVillage(villageDTO);
-    }
 
-    @PutMapping("/{id}")
-    public VillageDTO updateVillage(@PathVariable Long id, @RequestBody VillageDTO villageDTO) {
-        villageDTO.setId(id);
-        return villageService.saveVillage(villageDTO);
-    }
 
     @DeleteMapping("/{id}")
     public void deleteVillage(@PathVariable Long id) {
