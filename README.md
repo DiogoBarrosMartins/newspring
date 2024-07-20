@@ -9,18 +9,8 @@ Player Management API is a Spring Boot application that provides RESTful endpoin
 - Java
 - Spring Boot
 - Spring Data JPA
-- Jakarta Validation
-- Lombok
 - Maven
-- Docker Desktop
-
-## Project Structure
-
-- `src/main/java/com/game/api/player/controller`: Contains REST controllers.
-- `src/main/java/com/game/api/player/dto`: Contains Data Transfer Object classes.
-- `src/main/java/com/game/api/player/entity`: Contains JPA entity classes.
-- `src/main/java/com/game/api/player/repository`: Contains repository interfaces.
-- `src/main/java/com/game/api/player/service`: Contains service classes.
+- Docker 
 
 ## Getting Started
 
@@ -45,48 +35,224 @@ Player Management API is a Spring Boot application that provides RESTful endpoin
 
 3. Run the application:
    ```bash
-    Open Docker Desktop app:
-    docker compose up -d
+    docker compose up -build
    ```
 
 4. The application will be available at `http://localhost:8080`.
 
 ## API Endpoints
 
-### Get All Players
+### Account Endpoints
 
-- **URL**: `/api/players`
-- **Method**: `GET`
-- **Description**: Retrieve a list of all players.
+#### Get all accounts
+- **URL:** `/accounts`
+- **Method:** `GET`
+- **Request:**
+    - Headers: `Content-Type: application/json`
+    - Body: None
+- **Response:**
+    - Status: `200 OK`
+    - Body:
+        ```json
+        [
+            {
+                "id": 1,
+                "username": "john_doe",
+                "password": "password123",
+                "villageIds": [1, 2]
+            },
+            ...
+        ]
+        ```
 
-### Get Player by ID
+#### Get account by ID
+- **URL:** `/accounts/{id}`
+- **Method:** `GET`
+- **Request:**
+    - Headers: `Content-Type: application/json`
+    - Body: None
+- **Response:**
+    - Status: `200 OK`
+    - Body:
+        ```json
+        {
+            "id": 1,
+            "username": "john_doe",
+            "password": "password123",
+            "villageIds": [1, 2]
+        }
+        ```
 
-- **URL**: `/api/players/{id}`
-- **Method**: `GET`
-- **Description**: Retrieve a player by their ID.
-- **Path Variable**:
-  - `id`: Long
+#### Create a new account
+- **URL:** `/accounts`
+- **Method:** `POST`
+- **Request:**
+    - Headers: `Content-Type: application/json`
+    - Body:
+        ```json
+        {
+            "username": "john_doe",
+            "password": "password123"
+        }
+        ```
+- **Response:**
+    - Status: `201 Created`
+    - Body:
+        ```json
+        {
+            "id": 1,
+            "username": "john_doe",
+            "password": "password123",
+            "villageIds": []
+        }
+        ```
 
-### Create a New Player
+#### Update an account
+- **URL:** `/accounts/{id}`
+- **Method:** `PUT`
+- **Request:**
+    - Headers: `Content-Type: application/json`
+    - Body:
+        ```json
+        {
+            "username": "john_doe_updated",
+            "password": "newpassword123"
+        }
+        ```
+- **Response:**
+    - Status: `200 OK`
+    - Body:
+        ```json
+        {
+            "id": 1,
+            "username": "john_doe_updated",
+            "password": "newpassword123",
+            "villageIds": [1, 2]
+        }
+        ```
 
-- **URL**: `/api/players`
-- **Method**: `POST`
-- **Description**: Create a new player.
-- **Request Body**: `PlayerDTO`
+#### Delete an account
+- **URL:** `/accounts/{id}`
+- **Method:** `DELETE`
+- **Request:**
+    - Headers: `Content-Type: application/json`
+    - Body: None
+- **Response:**
+    - Status: `204 No Content`
+    - Body: None
 
-### Update an Existing Player
+#### Authenticate account
+- **URL:** `/accounts/authenticate`
+- **Method:** `POST`
+- **Request:**
+    - Headers: `Content-Type: application/json`
+    - Body:
+        ```json
+        {
+            "username": "john_doe",
+            "password": "password123"
+        }
+        ```
+- **Response:**
+    - Status: `200 OK`
+    - Body:
+        ```json
+        {
+            "authenticated": true
+        }
+        ```
 
-- **URL**: `/api/players/{id}`
-- **Method**: `PATCH`
-- **Description**: Update an existing player.
-- **Path Variable**:
-  - `id`: Long
-- **Request Body**: `PlayerDTO`
+### Village Endpoints
 
-### Delete a Player
+#### Get all villages
+- **URL:** `/villages`
+- **Method:** `GET`
+- **Request:**
+    - Headers: `Content-Type: application/json`
+    - Body: None
+- **Response:**
+    - Status: `200 OK`
+    - Body:
+        ```json
+        [
+            {
+                "id": 1,
+                "name": "Village 1",
+                "accountId": 1
+            },
+            ...
+        ]
+        ```
 
-- **URL**: `/api/players/{id}`
-- **Method**: `DELETE`
-- **Description**: Delete a player by their ID.
-- **Path Variable**:
-  - `id`: Long
+#### Get village by ID
+- **URL:** `/villages/{id}`
+- **Method:** `GET`
+- **Request:**
+    - Headers: `Content-Type: application/json`
+    - Body: None
+- **Response:**
+    - Status: `200 OK`
+    - Body:
+        ```json
+        {
+            "id": 1,
+            "name": "Village 1",
+            "accountId": 1
+        }
+        ```
+
+#### Create a new village
+- **URL:** `/villages`
+- **Method:** `POST`
+- **Request:**
+    - Headers: `Content-Type: application/json`
+    - Body:
+        ```json
+        {
+            "name": "Village 1",
+            "accountId": 1
+        }
+        ```
+- **Response:**
+    - Status: `201 Created`
+    - Body:
+        ```json
+        {
+            "id": 1,
+            "name": "Village 1",
+            "accountId": 1
+        }
+        ```
+
+#### Update a village
+- **URL:** `/villages/{id}`
+- **Method:** `PUT`
+- **Request:**
+    - Headers: `Content-Type: application/json`
+    - Body:
+        ```json
+        {
+            "name": "Updated Village",
+            "accountId": 1
+        }
+        ```
+- **Response:**
+    - Status: `200 OK`
+    - Body:
+        ```json
+        {
+            "id": 1,
+            "name": "Updated Village",
+            "accountId": 1
+        }
+        ```
+
+#### Delete a village
+- **URL:** `/villages/{id}`
+- **Method:** `DELETE`
+- **Request:**
+    - Headers: `Content-Type: application/json`
+    - Body: None
+- **Response:**
+    - Status: `204 No Content`
+    - Body: None

@@ -28,30 +28,23 @@ public class AccountService {
     @Autowired
     private VillageService villageService;
 
-    public Account saveAccount(Account account) {
-        return accountRepository.save(account);
-    }
 
-    public AccountDTO createAccount(AccountDTO accountDTO) throws Exception {
+    public AccountDTO createAccount(AccountDTO accountDTO) {
         Account account = accountMapper.dtoToEntity(accountDTO);
         if (accountRepository.findByUsername(account.getUsername()).isPresent()) {
             throw new EmailAlreadyExistsException("Email or username already exists: " + accountDTO.getUsername());
         }
 
-        // Save the account first to get the ID
-        Account createdAccount = accountRepository.save(account);
 
-        // Create the initial village for the new account
+        Account createdAccount = accountRepository.save(account);
         Village village = villageService.createVillage("New village", createdAccount);
 
-        // Add the village ID to the account's villageIds list
         if (createdAccount.getVillageIds() == null) {
             createdAccount.setVillageIds(new ArrayList<>());
         }
         createdAccount.getVillageIds().add(village.getId());
         accountRepository.save(createdAccount);
 
-        // Return the DTO of the created account
         return accountMapper.entityToDto(createdAccount);
     }
 
